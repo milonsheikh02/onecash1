@@ -182,23 +182,31 @@ app.get('/api/order/:orderId', (req, res) => {
   try {
     const { orderId } = req.params;
     
-    if (fs.existsSync('orders.json')) {
-      const data = fs.readFileSync('orders.json');
-      const orders = JSON.parse(data);
-      
-      const order = orders.find(order => order.order_id === orderId);
-      
-      if (order) {
-        res.json(order);
-      } else {
-        res.status(404).json({ error: 'Order not found' });
-      }
+    // Check if orders.json file exists
+    if (!fs.existsSync('orders.json')) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    const data = fs.readFileSync('orders.json', 'utf8');
+    
+    // Check if file is empty
+    if (!data || data.trim() === '') {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    const orders = JSON.parse(data);
+    
+    const order = orders.find(order => order.order_id === orderId);
+    
+    if (order) {
+      res.json(order);
     } else {
       res.status(404).json({ error: 'Order not found' });
     }
   } catch (error) {
     console.error('Error fetching order:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    // If there's a parsing error, return not found instead of internal error
+    res.status(404).json({ error: 'Order not found' });
   }
 });
 
