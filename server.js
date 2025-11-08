@@ -1,3 +1,13 @@
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
