@@ -1,0 +1,42 @@
+# One⚡Cash Deployment Instructions
+
+## Deploying to Vercel
+
+1. **Create a GitHub Repository:**
+   - Go to https://github.com/new
+   - Create a new repository named "onecash"
+   - Don't initialize with a README
+
+2. **Push Code to GitHub:**
+   Open a terminal in the project folder and run:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin https://github.com/milonsheikh02/onecash1.git
+   git push -u origin main
+   ```
+
+3. **Deploy to Vercel:**
+   - Go to https://vercel.com/new
+   - Sign in or create an account
+   - Click "New Project"
+   - Import your GitHub repository
+   - Configure the project with these settings:
+     - Framework Preset: Other
+     - Build Command: `npm install`
+     - Output Directory: `.` (dot)
+   - Add environment variables:
+     - `NOW_API_KEY`: X79MKTT-NC9MKP2-KTCPWK2-YDXKMNZ
+     - `WEBHOOK_SECRET`: U8vhJD+BaZuUx3KP4PGxpTADgnNRRuVs
+   - Click "Deploy"
+
+4. **Access Your Site:**
+   - After deployment completes, Vercel will provide you with a URL
+   - Your OneCash exchange system will be live!
+
+## Notes:
+- The environment variables are already configured in your .env file
+- The vercel.json file is already set up for proper deployment
+- Your application will run on Node.js 14+ as specified in package.json

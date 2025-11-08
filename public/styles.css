@@ -1,0 +1,248 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #e55e00;
+}
+
+.btn-secondary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #0069d9;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #ff6b00, #ff8c00);
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+/* Exchange Section */
+.exchange-section {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin: 40px 0;
+}
+
+.exchange-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-group input[readonly] {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+/* Payment Page Styles */
+.payment-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.payment-header h1 {
+    color: #ff6b00;
+    margin-bottom: 10px;
+}
+
+.payment-details {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.label {
+    font-weight: 600;
+    color: #555;
+}
+
+.value {
+    font-weight: 500;
+    text-align: right;
+}
+
+.address {
+    font-family: monospace;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.qr-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#qrcode {
+    display: inline-block;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+.timer-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.timer {
+    display: inline-block;
+    background: #ff6b00;
+    color: white;
+    padding: 20px;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+}
+
+.timer #timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: block;
+}
+
+.timer p {
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.status-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.status {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.status-value {
+    color: #ff6b00;
+}
+
+.actions {
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+    
+    .hero {
+        padding: 60px 20px;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .exchange-section {
+        padding: 20px;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+    }
+    
+    .value {
+        text-align: left;
+        margin-top: 5px;
+    }
+}

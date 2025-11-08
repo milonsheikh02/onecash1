@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - One⚡Cash</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="payment-header">
+            <h1>Complete Your Payment</h1>
+            <p>Please send your cryptocurrency to the address below</p>
+        </div>
+
+        <div class="payment-details">
+            <div class="detail-row">
+                <span class="label">You Send:</span>
+                <span id="sendAmount" class="value">-</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="label">You Receive:</span>
+                <span id="receiveAmount" class="value">-</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="label">Receive Method:</span>
+                <span id="receiveMethod" class="value">-</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="label">Receiving Wallet:</span>
+                <span id="receiveWallet" class="value">-</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="label">Payment Address:</span>
+                <span id="paymentAddress" class="value address">-</span>
+            </div>
+        </div>
+
+        <div class="qr-section">
+            <div id="qrcode"></div>
+            <p>Scan QR code to pay</p>
+        </div>
+
+        <div class="timer-section">
+            <div class="timer">
+                <span id="timer">20:00</span>
+                <p>Complete payment within</p>
+            </div>
+        </div>
+
+        <div class="status-section">
+            <div class="status">
+                <span>Status:</span>
+                <span id="paymentStatus" class="status-value">Pending</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="checkStatusBtn" class="btn-secondary">Check Payment Status</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="payment.js"></script>
+</body>
+</html>
