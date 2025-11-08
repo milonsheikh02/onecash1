@@ -72,6 +72,14 @@ app.post('/api/create-payment', async (req, res) => {
     // Generate order ID
     const orderId = 'NP' + Date.now() + Math.floor(Math.random() * 1000);
     
+    // Generate mock payment address based on receive method
+    let paymentAddress = '';
+    if (receiveMethod.includes('TRC20')) {
+      paymentAddress = 'T' + Math.random().toString(36).substring(2, 30).toUpperCase();
+    } else {
+      paymentAddress = '0x' + Math.random().toString(36).substring(2, 30);
+    }
+    
     // Create order object
     const order = {
       order_id: orderId,
@@ -80,20 +88,13 @@ app.post('/api/create-payment', async (req, res) => {
       usd_value: usdValue,
       receive_method: receiveMethod,
       receive_wallet: receiveWallet,
+      payment_address: paymentAddress,
       status: 'pending',
       created_at: new Date().toISOString()
     };
     
     // Save order to file
     saveOrder(order);
-    
-    // Generate mock payment address based on receive method
-    let paymentAddress = '';
-    if (receiveMethod.includes('TRC20')) {
-      paymentAddress = 'T' + Math.random().toString(36).substring(2, 30).toUpperCase();
-    } else {
-      paymentAddress = '0x' + Math.random().toString(36).substring(2, 30);
-    }
     
     // Return success response with mock data
     res.json({
