@@ -44,16 +44,14 @@ async function fetchOrderDetails() {
                 if (order.invoice_id && !order.invoice_id.startsWith('mock_')) {
                     const invoiceInfo = document.createElement('div');
                     invoiceInfo.className = 'invoice-info';
-                    invoiceInfo.innerHTML = `<p>Invoice ID: ${order.invoice_id}</p>`;
+                    invoiceInfo.innerHTML = `<p><strong>REAL PAYMENT</strong> - Invoice ID: ${order.invoice_id}</p>`;
                     paymentAddress.parentNode.insertBefore(invoiceInfo, paymentAddress.nextSibling);
-                } else {
+                } else if (order.invoice_id && order.invoice_id.startsWith('mock_')) {
                     // Show demo notice only if it's actually demo data
-                    if (order.invoice_id && order.invoice_id.startsWith('mock_')) {
-                        const demoNotice = document.createElement('div');
-                        demoNotice.className = 'demo-notice';
-                        demoNotice.innerHTML = '<p><strong>DEMO MODE</strong> - This is not a real payment request</p>';
-                        paymentAddress.parentNode.insertBefore(demoNotice, paymentAddress.nextSibling);
-                    }
+                    const demoNotice = document.createElement('div');
+                    demoNotice.className = 'demo-notice';
+                    demoNotice.innerHTML = '<p><strong>DEMO MODE</strong> - This is not a real payment request</p>';
+                    paymentAddress.parentNode.insertBefore(demoNotice, paymentAddress.nextSibling);
                 }
             } else {
                 paymentAddress.textContent = 'Payment information will be generated shortly...';

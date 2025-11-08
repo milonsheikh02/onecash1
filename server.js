@@ -78,6 +78,11 @@ app.post('/api/create-payment', async (req, res) => {
     let invoiceId = '';
     
     try {
+      // Check if API key is available
+      if (!process.env.NOW_API_KEY) {
+        throw new Error('NOW_API_KEY not configured in environment variables');
+      }
+      
       const nowPaymentsResponse = await axios.post('https://api.nowpayments.io/v1/invoice', {
         price_amount: parseFloat(usdValue),
         price_currency: 'usd',
@@ -102,10 +107,13 @@ app.post('/api/create-payment', async (req, res) => {
       
       // For payment address, we'll use the invoice URL since NowPayments doesn't provide a direct address for invoices
       paymentAddress = paymentUrl;
+      
+      // If we get here, the API call was successful
+      console.log('Successfully created NowPayments invoice:', invoiceId);
     } catch (nowPaymentsError) {
       console.error('NowPayments API error:', nowPaymentsError.response?.data || nowPaymentsError.message);
       
-      // Even if NowPayments fails, we still create an order with mock data
+      // Only use mock data if there's a real error
       if (receiveMethod.includes('TRC20')) {
         paymentAddress = 'T' + Math.random().toString(36).substring(2, 30).toUpperCase();
       } else {
@@ -130,7 +138,7 @@ app.post('/api/create-payment', async (req, res) => {
       created_at: new Date().toISOString()
     };
     
-    // Save order to file
+    // Save order (with Vercel compatibility)
     saveOrder(order);
     
     // Return success response
