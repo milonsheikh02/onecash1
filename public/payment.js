@@ -19,6 +19,7 @@ let timeLeft = 20 * 60; // 20 minutes in seconds
 async function fetchOrderDetails() {
     if (!orderId) {
         alert('Invalid order ID');
+        generateMockOrderData();
         return;
     }
     
@@ -32,22 +33,41 @@ async function fetchOrderDetails() {
             receiveAmount.textContent = `${order.usd_value} USD`;
             receiveMethod.textContent = order.receive_method;
             receiveWallet.textContent = order.receive_wallet;
-            // Use the payment address from the order or generate a mock one
-            const address = order.payment_address || generateMockAddress(order.receive_method);
-            paymentAddress.textContent = address;
             
-            // Generate QR code
-            generateQRCode(address);
+            // Show payment information
+            if (order.payment_address) {
+                paymentAddress.textContent = order.payment_address;
+                // Generate QR code for the payment URL
+                generateQRCode(order.payment_address);
+                
+                // Show invoice information if available
+                if (order.invoice_id && !order.invoice_id.startsWith('mock_')) {
+                    const invoiceInfo = document.createElement('div');
+                    invoiceInfo.className = 'invoice-info';
+                    invoiceInfo.innerHTML = `<p>Invoice ID: ${order.invoice_id}</p>`;
+                    paymentAddress.parentNode.insertBefore(invoiceInfo, paymentAddress.nextSibling);
+                } else {
+                    // Show demo notice only if it's actually demo data
+                    if (order.invoice_id && order.invoice_id.startsWith('mock_')) {
+                        const demoNotice = document.createElement('div');
+                        demoNotice.className = 'demo-notice';
+                        demoNotice.innerHTML = '<p><strong>DEMO MODE</strong> - This is not a real payment request</p>';
+                        paymentAddress.parentNode.insertBefore(demoNotice, paymentAddress.nextSibling);
+                    }
+                }
+            } else {
+                paymentAddress.textContent = 'Payment information will be generated shortly...';
+            }
             
             // Start timer
             startTimer();
         } else {
-            // If order not found, try to generate mock data
+            alert('Order not found. Showing demo data.');
             generateMockOrderData();
         }
     } catch (error) {
         console.error('Error fetching order:', error);
-        // If there's an error, generate mock data
+        alert('Error loading payment information. Showing demo data.');
         generateMockOrderData();
     }
 }
@@ -86,10 +106,14 @@ function generateMockOrderData() {
     // Generate QR code
     generateQRCode(address);
     
+    // Add demo notice
+    const demoNotice = document.createElement('div');
+    demoNotice.className = 'demo-notice';
+    demoNotice.innerHTML = '<p><strong>DEMO MODE</strong> - This is not a real payment request</p>';
+    paymentAddress.parentNode.insertBefore(demoNotice, paymentAddress.nextSibling);
+    
     // Start timer
     startTimer();
-    
-    alert('Showing demo data. Real order not found.');
 }
 
 // Generate QR code
@@ -97,14 +121,16 @@ function generateQRCode(address) {
     const qrCodeElement = document.getElementById('qrcode');
     qrCodeElement.innerHTML = ''; // Clear previous QR code
     
-    new QRCode(qrCodeElement, {
-        text: address,
-        width: 128,
-        height: 128,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
+    if (address && address !== 'Payment information will be generated shortly...') {
+        new QRCode(qrCodeElement, {
+            text: address,
+            width: 128,
+            height: 128,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    }
 }
 
 // Start countdown timer
@@ -151,7 +177,7 @@ async function checkPaymentStatus() {
 }
 
 // Event listener for check status button
-checkStatusBtn.addEventListener('click', checkPaymentStatus);
+checkStatusBtn.addEventListener('click', checkStatusBtn);
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {

@@ -72,23 +72,60 @@ app.post('/api/create-payment', async (req, res) => {
     // Generate order ID
     const orderId = 'NP' + Date.now() + Math.floor(Math.random() * 1000);
     
-    // Generate mock payment address based on receive method
+    // Try to create invoice with NowPayments API
     let paymentAddress = '';
-    if (receiveMethod.includes('TRC20')) {
-      paymentAddress = 'T' + Math.random().toString(36).substring(2, 30).toUpperCase();
-    } else {
-      paymentAddress = '0x' + Math.random().toString(36).substring(2, 30);
+    let paymentUrl = '';
+    let invoiceId = '';
+    
+    try {
+      const nowPaymentsResponse = await axios.post('https://api.nowpayments.io/v1/invoice', {
+        price_amount: parseFloat(usdValue),
+        price_currency: 'usd',
+        pay_currency: coin.toLowerCase(),
+        order_id: orderId,
+        order_description: `Exchange ${amount} ${coin} to ${receiveMethod}`,
+        ipn_callback_url: `https://your-domain.com/webhook/payment?secret=${process.env.WEBHOOK_SECRET}`,
+        success_url: `https://your-domain.com/payment.html?order_id=${orderId}`,
+        cancel_url: `https://your-domain.com/`
+      }, {
+        headers: {
+          'x-api-key': process.env.NOW_API_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log('NowPayments API Response:', nowPaymentsResponse.data);
+      
+      // Extract data from the correct response fields
+      invoiceId = nowPaymentsResponse.data.id; // Use 'id' instead of 'invoice_id'
+      paymentUrl = nowPaymentsResponse.data.invoice_url;
+      
+      // For payment address, we'll use the invoice URL since NowPayments doesn't provide a direct address for invoices
+      paymentAddress = paymentUrl;
+    } catch (nowPaymentsError) {
+      console.error('NowPayments API error:', nowPaymentsError.response?.data || nowPaymentsError.message);
+      
+      // Even if NowPayments fails, we still create an order with mock data
+      if (receiveMethod.includes('TRC20')) {
+        paymentAddress = 'T' + Math.random().toString(36).substring(2, 30).toUpperCase();
+      } else {
+        paymentAddress = '0x' + Math.random().toString(36).substring(2, 30);
+      }
+      paymentUrl = `https://nowpayments.io/payment/${orderId}`;
+      invoiceId = 'mock_' + orderId;
     }
     
     // Create order object
     const order = {
       order_id: orderId,
+      invoice_id: invoiceId,
       coin: coin,
       amount: amount,
       usd_value: usdValue,
       receive_method: receiveMethod,
       receive_wallet: receiveWallet,
       payment_address: paymentAddress,
+      payment_url: paymentUrl,
       status: 'pending',
       created_at: new Date().toISOString()
     };
@@ -96,18 +133,19 @@ app.post('/api/create-payment', async (req, res) => {
     // Save order to file
     saveOrder(order);
     
-    // Return success response with mock data
+    // Return success response
     res.json({
       success: true,
       order_id: orderId,
+      invoice_id: invoiceId,
       payment_address: paymentAddress,
-      payment_url: `https://nowpayments.io/payment/${orderId}`,
+      payment_url: paymentUrl,
       redirect_url: `/payment.html?order_id=${orderId}`
     });
     
   } catch (error) {
     console.error('Error creating payment:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error: ' + error.message });
   }
 });
 
@@ -166,19 +204,6 @@ function updateOrderStatus(orderId, status) {
       fs.writeFileSync('orders.json', JSON.stringify(orders, null, 2));
     }
   }
-}
-
-// Function to generate mock payment address
-function generateMockPaymentAddress(coin, method) {
-  const prefixes = {
-    'BTC': 'bc1',
-    'ETH': '0x'
-  };
-  
-  const prefix = prefixes[coin] || '0x';
-  const randomPart = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  
-  return prefix + randomPart;
 }
 
 // Get order details
