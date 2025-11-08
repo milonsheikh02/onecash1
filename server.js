@@ -87,17 +87,20 @@ app.post('/api/create-payment', async (req, res) => {
     // Save order to file
     saveOrder(order);
     
-    // In a real implementation, you would call NowPayments API here
-    // For this example, we'll simulate the response
-    const paymentAddress = generateMockPaymentAddress(coin, receiveMethod);
-    const paymentUrl = `https://nowpayments.io/payment/${orderId}`;
+    // Generate mock payment address based on receive method
+    let paymentAddress = '';
+    if (receiveMethod.includes('TRC20')) {
+      paymentAddress = 'T' + Math.random().toString(36).substring(2, 30).toUpperCase();
+    } else {
+      paymentAddress = '0x' + Math.random().toString(36).substring(2, 30);
+    }
     
-    // Return success response
+    // Return success response with mock data
     res.json({
       success: true,
       order_id: orderId,
       payment_address: paymentAddress,
-      payment_url: paymentUrl,
+      payment_url: `https://nowpayments.io/payment/${orderId}`,
       redirect_url: `/payment.html?order_id=${orderId}`
     });
     
