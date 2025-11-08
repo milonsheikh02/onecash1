@@ -1,13 +1,14 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config();
+const express = require('express')
+const app = express()
+const port = process.env.PORT || 4000
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 
 // Middleware
 app.use(cors());
