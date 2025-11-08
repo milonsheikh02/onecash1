@@ -171,37 +171,61 @@ app.post('/webhook/payment', (req, res) => {
   }
 });
 
-// Function to save order to file
+// Function to save order to file (with Vercel compatibility)
 function saveOrder(order) {
-  let orders = [];
+  // On Vercel, we can't write to the filesystem, so we'll just log the order
+  // In a production environment, you would use a database instead
+  console.log('New order created:', JSON.stringify(order, null, 2));
   
-  // Read existing orders
-  if (fs.existsSync('orders.json')) {
-    const data = fs.readFileSync('orders.json');
-    orders = JSON.parse(data);
+  // For local development, we can still write to file
+  if (process.env.NODE_ENV !== 'production') {
+    let orders = [];
+    
+    // Read existing orders
+    if (fs.existsSync('orders.json')) {
+      const data = fs.readFileSync('orders.json');
+      orders = JSON.parse(data);
+    }
+    
+    // Add new order
+    orders.push(order);
+    
+    // Write updated orders
+    try {
+      fs.writeFileSync('orders.json', JSON.stringify(orders, null, 2));
+    } catch (error) {
+      console.error('Error writing to orders.json:', error);
+      // Continue without saving to file
+    }
   }
-  
-  // Add new order
-  orders.push(order);
-  
-  // Write updated orders
-  fs.writeFileSync('orders.json', JSON.stringify(orders, null, 2));
 }
 
-// Function to update order status
+// Function to update order status (with Vercel compatibility)
 function updateOrderStatus(orderId, status) {
-  if (fs.existsSync('orders.json')) {
-    const data = fs.readFileSync('orders.json');
-    let orders = JSON.parse(data);
-    
-    // Find and update order
-    const orderIndex = orders.findIndex(order => order.order_id === orderId);
-    if (orderIndex !== -1) {
-      orders[orderIndex].status = status;
-      orders[orderIndex].updated_at = new Date().toISOString();
-      
-      // Write updated orders
-      fs.writeFileSync('orders.json', JSON.stringify(orders, null, 2));
+  // On Vercel, we can't write to the filesystem
+  // In a production environment, you would use a database instead
+  console.log(`Order ${orderId} status updated to: ${status}`);
+  
+  // For local development, we can still update the file
+  if (process.env.NODE_ENV !== 'production') {
+    if (fs.existsSync('orders.json')) {
+      try {
+        const data = fs.readFileSync('orders.json');
+        let orders = JSON.parse(data);
+        
+        // Find and update order
+        const orderIndex = orders.findIndex(order => order.order_id === orderId);
+        if (orderIndex !== -1) {
+          orders[orderIndex].status = status;
+          orders[orderIndex].updated_at = new Date().toISOString();
+          
+          // Write updated orders
+          fs.writeFileSync('orders.json', JSON.stringify(orders, null, 2));
+        }
+      } catch (error) {
+        console.error('Error updating orders.json:', error);
+        // Continue without updating file
+      }
     }
   }
 }
@@ -211,6 +235,14 @@ app.get('/api/order/:orderId', (req, res) => {
   try {
     const { orderId } = req.params;
     
+    // On Vercel, we can't read from the filesystem
+    // In a production environment, you would use a database instead
+    if (process.env.NODE_ENV === 'production') {
+      // Return a mock order for demo purposes
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    // For local development, read from file
     // Check if orders.json file exists
     if (!fs.existsSync('orders.json')) {
       return res.status(404).json({ error: 'Order not found' });

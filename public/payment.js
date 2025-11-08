@@ -62,7 +62,8 @@ async function fetchOrderDetails() {
             // Start timer
             startTimer();
         } else {
-            alert('Order not found. Showing demo data.');
+            // If order not found on server, show demo data
+            alert('Order not found on server. Showing demo data.');
             generateMockOrderData();
         }
     } catch (error) {
@@ -168,6 +169,7 @@ async function checkPaymentStatus() {
                 alert('Payment successful! Thank you for using One⚡Cash.');
             }
         } else {
+            // If order not found, assume it's pending
             paymentStatus.textContent = 'Pending';
         }
     } catch (error) {
@@ -177,7 +179,7 @@ async function checkPaymentStatus() {
 }
 
 // Event listener for check status button
-checkStatusBtn.addEventListener('click', checkStatusBtn);
+checkStatusBtn.addEventListener('click', checkPaymentStatus);
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
