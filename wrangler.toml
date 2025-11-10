@@ -18,4 +18,4 @@ upload_format = "service-worker"
 # Example: wrangler secret put SECRET_NOW_API_KEY
 
 [triggers]
-routes = ["onncx.com/api/*", "www.onncx.com/api/*", "onncx.com/webhook/*", "www.onncx.com/webhook/*"]
+routes = ["onncx.com/api/*", "www.onncx.com/api/*", "https://onecash1.milon-github.workers.dev/api*", "onncx.com/webhook/*", "www.onncx.com/webhook/*"]
