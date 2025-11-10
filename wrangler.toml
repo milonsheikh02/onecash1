@@ -1,7 +1,7 @@
 # wrangler.toml
 
 name = "onecash1"
-main = "src/index.js"
+main = "public/index.js"
 compatibility_date = "2023-11-10"
 
 # Fill your Cloudflare account id here
