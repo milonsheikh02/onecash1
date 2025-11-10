@@ -2,7 +2,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const orderId = urlParams.get('order_id');
 
-// DOM Elements
+// Real Elements
 const sendAmount = document.getElementById('sendAmount');
 const receiveAmount = document.getElementById('receiveAmount');
 const receiveMethod = document.getElementById('receiveMethod');
