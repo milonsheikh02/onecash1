@@ -1,0 +1,21 @@
+name = "onncx-worker"
+main = "worker.js"
+compatibility_date = "2025-11-05"
+
+# Fill your Cloudflare account id here
+# Get it from https://dash.cloudflare.com/profile -> Account ID
+account_id = "YOUR_ACCOUNT_ID_HERE"
+
+# Where to upload (service zone)
+# If you prefer direct CLI deploy, ensure this matches your Cloudflare account and zone
+zone_id = "YOUR_ZONE_ID_HERE" # optional for Workers.dev routes; required for custom domain routes via zone.
+
+[build]
+upload_format = "service-worker"
+
+[vars]
+# Nothing secret here; use `wrangler secret put` or dashboard Secrets to set secrets
+# Example: wrangler secret put SECRET_NOW_API_KEY
+
+[triggers]
+routes = ["onncx.com/api/*", "www.onncx.com/api/*", "onncx.com/webhook/*", "www.onncx.com/webhook/*"]
