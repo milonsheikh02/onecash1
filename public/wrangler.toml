@@ -1,6 +1,8 @@
-name = "onncx-worker"
-main = "worker.js"
-compatibility_date = "2025-11-05"
+# wrangler.toml
+
+name = "onecash1"
+main = "public/index.js"
+compatibility_date = "2023-11-10"
 
 # Fill your Cloudflare account id here
 # Get it from https://dash.cloudflare.com/profile -> Account ID
